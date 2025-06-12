@@ -42,18 +42,12 @@
 </body>
 </html> -->
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Join Sparkl, Book-Cleaning</title>
-</head>
-<body>
-  <h2>Join Book Cleaning</h2>
-  <p>If you have the app installed, it will open automatically. Otherwise, you will be redirected to download the app.</p>
-
   <script type="text/javascript">
     // Function to get query parameters from the URL
     function getQueryParam(param) {
@@ -61,43 +55,48 @@
       return urlParams.get(param);
     }
 
-    const refCode = getQueryParam("ref");
+    function redirectToApp() {
+      const refCode = getQueryParam("ref");
+      const appSchemeURL = refCode
+        ? `sparkl://join/signup?ref=${refCode}`
+        : "sparkl://join";
 
-    // Construct custom app scheme URL
-    const appSchemeURL = refCode
-      ? `sparkl://join/signup?ref=${refCode}`
-      : "sparkl://join";
+      const playStoreURL = "https://play.google.com/store/apps/details?id=com.geniai.family.friends.tracker.location";
+      const appStoreURL = "https://apps.apple.com/pk/app/family-circle/id6478211890";
 
-    const playStoreURL = "https://play.google.com/store/apps/details?id=com.geniai.family.friends.tracker.location";
-    const appStoreURL = "https://apps.apple.com/pk/app/family-circle/id6478211890";
+      // Detect Apple devices (iOS, iPadOS, macOS)
+      const isAppleDevice = /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent) && !window.MSStream;
 
-    // Improved iOS detection
-    const isIOS = (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent) && !window.MSStream);
-
-
-    // For iOS, we need to use a different approach
-    if (isIOS) {
-      // First try to open the app
-      window.location = appSchemeURL;
-      
-      // If the app is not installed, this timeout will execute
-      setTimeout(function() {
-        // Only redirect if we're still on the page
-        if (!document.webkitHidden && !document.hidden) {
+      if (isAppleDevice) {
+        // For Apple devices, use iframe technique to avoid page unloading
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = appSchemeURL;
+        document.body.appendChild(iframe);
+        
+        // Set timeout for fallback to App Store
+        setTimeout(function() {
           window.location = appStoreURL;
-        }
-      }, 500); // Reduced delay for better UX
-    } 
-    // For Android/other devices
-    else {
-      // Try to open the app
-      window.location.href = appSchemeURL;
-      
-      // Fallback to Play Store after delay
-      setTimeout(function() {
-        window.location.href = playStoreURL;
-      }, 1000);
+        }, 500);
+      } else {
+        // For Android/other devices
+        window.location.href = appSchemeURL;
+        
+        // Set timeout for fallback to Play Store
+        setTimeout(function() {
+          if (!document.hidden) {
+            window.location.href = playStoreURL;
+          }
+        }, 1000);
+      }
     }
+
+    // Start the redirect process when page loads
+    window.onload = redirectToApp;
   </script>
+</head>
+<body>
+  <h2>Join Book Cleaning</h2>
+  <p>If you have the app installed, it will open automatically. Otherwise, you will be redirected to download the app.</p>
 </body>
 </html>
