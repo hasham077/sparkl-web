@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -38,6 +38,46 @@
         window.location.href = playStoreURL;
       }
     }, 1000); // Delay of 1 second (adjust if needed)
+  </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Join Sparkl, Book-Cleaning</title>
+</head>
+<body>
+  <h2>Join Book Cleaning</h2>
+  <p>If you have the app installed, it will open automatically. Otherwise, you will be redirected to download the app.</p>
+
+  <script type="text/javascript">
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    const refCode = getQueryParam("ref");
+    const appSchemeURL = refCode
+      ? `sparkl://join/signup?ref=${refCode}`
+      : "sparkl://join";
+
+    const playStoreURL = "https://play.google.com/store/apps/details?id=com.geniai.family.friends.tracker.location";
+    const appStoreURL = "https://apps.apple.com/pk/app/family-circle/id6478211890";
+
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+    // Try to open the app
+    window.location.href = appSchemeURL;
+
+    // Only redirect if user stays on the page (i.e., app not installed)
+    const timeout = setTimeout(() => {
+      if (!document.hidden) {
+        window.location.href = isIOS ? appStoreURL : playStoreURL;
+      }
+    }, 1500); // Increased delay for better iOS handling
   </script>
 </body>
 </html>
