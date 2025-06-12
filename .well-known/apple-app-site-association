@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "N9AZA9ZTZ4.app.sparkl.client",
+        "paths": [ "/signup/*" ]
+      }
+    ]
+  }
+}
